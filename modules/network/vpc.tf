@@ -8,25 +8,21 @@ resource "aws_vpc" "vpc" {
   }
 }
 
-resource "aws_subnet" "pub-sub-a" {
-  vpc_id                  = aws_vpc.vpc.id
-  cidr_block              = var.sub_a_cidr
-  availability_zone       = var.sub_a_az
-  map_public_ip_on_launch = true
-
-  tags = {
-    Name = "${var.proj_name}-pub-sub-a"
-  }
+data "aws_availability_zones" "available" {
+  state = "available"
 }
 
-resource "aws_subnet" "pub-sub-b" {
+resource "aws_subnet" "public_subnet" {
+  count = var.subnet_count
   vpc_id                  = aws_vpc.vpc.id
-  cidr_block              = var.sub_b_cidr
-  availability_zone       = var.sub_b_az
+  cidr_block              = "10.0.${count.index}.0/24"
+  availability_zone       = data.aws_availability_zones.available.names[count.index]
   map_public_ip_on_launch = true
 
   tags = {
-    Name = "${var.proj_name}-pub-sub-b"
+    Name = "${var.proj_name}-pub-sub-${count.index}"
+    "kubernetes.io/role/elb"     = "1"
+    "kubernetes.io/cluster/demo" = "owned"
   }
 }
 
@@ -52,12 +48,8 @@ resource "aws_route" "dflt_route" {
   gateway_id             = aws_internet_gateway.igw.id
 }
 
-resource "aws_route_table_association" "rtb_asc_a" {
-  subnet_id      = aws_subnet.pub-sub-a.id
-  route_table_id = aws_route_table.rtbl.id
-}
-
-resource "aws_route_table_association" "rtb_asc_b" {
-  subnet_id      = aws_subnet.pub-sub-b.id
+resource "aws_route_table_association" "rtb_asc" {
+  count = var.subnet_count
+  subnet_id      = aws_subnet.public_subnet[count.index].id
   route_table_id = aws_route_table.rtbl.id
 }
