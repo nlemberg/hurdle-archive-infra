@@ -22,7 +22,7 @@ resource "aws_subnet" "public_subnet" {
   tags = {
     Name = "${var.proj_name}-pub-sub-${count.index}"
     "kubernetes.io/role/elb"     = "1"
-    "kubernetes.io/cluster/demo" = "owned"
+    "kubernetes.io/cluster/${var.proj_name}-eks-cluster" = "owned"
   }
 }
 
