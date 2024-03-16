@@ -61,3 +61,17 @@ variable "node_group_max_unavailable" {
   default     = 1
   type        = number
 }
+
+variable "gitops_repo_url" {
+  type = string
+}
+
+variable "argocd_github_secret_arn" {
+  description = "arn of secret github credentials for argocd "
+  type        = string
+}
+
+variable "argocd_admin_pass_arn" {
+  description = "arn of argocd admin password"
+  type        = string
+}
