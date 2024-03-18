@@ -9,7 +9,7 @@ data "kubernetes_secret" "argocd_adminpass" {
     name      = "argocd-admin-pass"
     namespace = "argocd"
   }
-  
+
   depends_on = [kubernetes_secret.argocd_admin_pass]
 
 }
@@ -20,7 +20,7 @@ resource "helm_release" "argocd" {
   chart      = "argo-cd"
   version    = "5.52.2"
 
-  namespace        = "argocd"
+  namespace = "argocd"
   # create_namespace = true
   # wait             = true
 

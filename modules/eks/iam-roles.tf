@@ -50,5 +50,5 @@ resource "aws_iam_role_policy_attachment" "nodes-AmazonEC2ContainerRegistryReadO
 
 resource "aws_iam_role_policy_attachment" "nodes-AmazonEBSCSIDriverPolicy" {
   role       = aws_iam_role.nodes_iam_role.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy" 
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
 }

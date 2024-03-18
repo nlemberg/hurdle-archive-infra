@@ -17,9 +17,9 @@ resource "kubernetes_secret" "argocd_github_cred" {
   }
 
   data = {
-    name          = "argocd-github-cred"
-    type          = "git"
-    url           = "https://github.com/nlemberg/hurdle-archive-gitops.git"
+    name     = "argocd-github-cred"
+    type     = "git"
+    url      = "https://github.com/nlemberg/hurdle-archive-gitops.git"
     username = jsondecode(data.aws_secretsmanager_secret_version.argocd_github_pat_secret.secret_string)["username"]
     password = jsondecode(data.aws_secretsmanager_secret_version.argocd_github_pat_secret.secret_string)["password"]
     # url           = var.gitops_repo_url
@@ -43,7 +43,7 @@ resource "kubernetes_secret" "argocd_admin_pass" {
   }
 
   data = {
-    name          = "argocd-admin-pass"
+    name      = "argocd-admin-pass"
     adminPass = data.aws_secretsmanager_secret_version.argocd_admin_pass_secret.secret_string
   }
 

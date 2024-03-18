@@ -13,15 +13,15 @@ data "aws_availability_zones" "available" {
 }
 
 resource "aws_subnet" "public_subnet" {
-  count = var.subnet_count
+  count                   = var.subnet_count
   vpc_id                  = aws_vpc.vpc.id
   cidr_block              = "10.0.${count.index}.0/24"
   availability_zone       = data.aws_availability_zones.available.names[count.index]
   map_public_ip_on_launch = true
 
   tags = {
-    Name = "${var.proj_name}-pub-sub-${count.index}"
-    "kubernetes.io/role/elb"     = "1"
+    Name                                                 = "${var.proj_name}-pub-sub-${count.index}"
+    "kubernetes.io/role/elb"                             = "1"
     "kubernetes.io/cluster/${var.proj_name}-eks-cluster" = "owned"
   }
 }
@@ -49,7 +49,7 @@ resource "aws_route" "dflt_route" {
 }
 
 resource "aws_route_table_association" "rtb_asc" {
-  count = var.subnet_count
+  count          = var.subnet_count
   subnet_id      = aws_subnet.public_subnet[count.index].id
   route_table_id = aws_route_table.rtbl.id
 }
