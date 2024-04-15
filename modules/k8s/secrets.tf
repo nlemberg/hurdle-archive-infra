@@ -1,9 +1,5 @@
-# data "aws_secretsmanager_secret_version" "argocd_github_cred_secret" {
-#   secret_id = var.argocd_github_secret_arn
-# }
-
 data "aws_secretsmanager_secret_version" "argocd_github_pat_secret" {
-  secret_id = "arn:aws:secretsmanager:us-east-1:644435390668:secret:nl-argocd-github-pat-I6nzKM"
+  secret_id = var.argocd_github_secret_arn
 }
 
 resource "kubernetes_secret" "argocd_github_cred" {
@@ -22,14 +18,10 @@ resource "kubernetes_secret" "argocd_github_cred" {
     url      = "https://github.com/nlemberg/hurdle-archive-gitops.git"
     username = jsondecode(data.aws_secretsmanager_secret_version.argocd_github_pat_secret.secret_string)["username"]
     password = jsondecode(data.aws_secretsmanager_secret_version.argocd_github_pat_secret.secret_string)["password"]
-    # url           = var.gitops_repo_url
-    # sshPrivateKey = data.aws_secretsmanager_secret_version.argocd_github_cred_secret.secret_string
-    # sshPrivateKey = trimspace(replace(data.aws_secretsmanager_secret_version.argocd_github_cred_secret.secret_string, "\r", ""))
   }
 
   type = "Opaque"
 
-  # depends_on = [helm_release.argocd]
 }
 
 data "aws_secretsmanager_secret_version" "argocd_admin_pass_secret" {
@@ -53,3 +45,24 @@ resource "kubernetes_secret" "argocd_admin_pass" {
 
 }
 
+data "aws_secretsmanager_secret_version" "hurdle_db_secret" {
+  secret_id = var.hurdle_db_secret_arn
+}
+
+resource "kubernetes_secret" "hurdle_db_cred" {
+  metadata {
+    name      = "mysql-secret"
+    namespace = "hurdle"
+  }
+
+  data = {
+    DATABASE_URL        = jsondecode(data.aws_secretsmanager_secret_version.hurdle_db_secret.secret_string)["DATABASE_URL"]
+    mysql-root-password = jsondecode(data.aws_secretsmanager_secret_version.hurdle_db_secret.secret_string)["mysql-root-password"]
+    mysql-password      = jsondecode(data.aws_secretsmanager_secret_version.hurdle_db_secret.secret_string)["mysql-password"]
+  }
+
+  type = "Opaque"
+
+  depends_on = [kubernetes_namespace.hurdle_namespace]
+
+}

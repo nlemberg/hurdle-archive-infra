@@ -25,4 +25,5 @@ module "k8s" {
   argocd_app_filepath      = "${path.module}/manifests/argocd-app.yaml"
   argocd_github_secret_arn = var.argocd_github_secret_arn
   argocd_admin_pass_arn    = var.argocd_admin_pass_arn
+  hurdle_db_secret_arn     = var.hurdle_db_secret_arn
 }

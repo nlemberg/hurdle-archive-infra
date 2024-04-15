@@ -75,3 +75,8 @@ variable "argocd_admin_pass_arn" {
   description = "arn of argocd admin password"
   type        = string
 }
+
+variable "hurdle_db_secret_arn" {
+  description = "arn of hurdle-archive db credentials"
+  type        = string
+}

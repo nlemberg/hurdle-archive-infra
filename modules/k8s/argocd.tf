@@ -4,6 +4,12 @@ resource "kubernetes_namespace" "argocd_namespace" {
   }
 }
 
+resource "kubernetes_namespace" "hurdle_namespace" {
+  metadata {
+    name = "hurdle"
+  }
+}
+
 data "kubernetes_secret" "argocd_adminpass" {
   metadata {
     name      = "argocd-admin-pass"
@@ -21,8 +27,6 @@ resource "helm_release" "argocd" {
   version    = "5.52.2"
 
   namespace = "argocd"
-  # create_namespace = true
-  # wait             = true
 
   values = [
     "${file(var.argocd_values_filepath)}"
